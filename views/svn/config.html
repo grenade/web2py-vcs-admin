@@ -1,0 +1,28 @@
+{{import helpers}}
+{{left_sidebar_enabled,right_sidebar_enabled=False,('title' in globals())}}
+{{extend 'layout.html'}}
+{{if 'title' in globals():}}<h3>{{=title}}</h3>{{pass}}
+{{if 'config_dict' in globals():}}
+<ul>{{for section_key, section_value in config_dict.iteritems():}}
+    <li>
+        <strong>{{=section_key}}</strong>
+        {{if section_key == 'groups' and 'form' in globals():}}{{=form}}{{else:}}
+        <ul>{{for option_key, option_value in section_value.iteritems():}}
+            <li>{{=option_key}}{{if request.args[1] != 'passwd':}}:{{=option_value}}{{elif auth.user.username == option_key:}}{{=A('reset password', _href=URL('user', args=['password']))}}{{pass}}</li>{{pass}}
+        </ul>{{pass}}
+    </li>{{pass}}
+</ul>
+{{pass}}
+
+{{block right_sidebar}}
+<h6>{{=T("Repositories")}}</h6>
+{{if 'repo_list' in globals():}}<ul>{{for repo in repo_list:}}
+  <li>
+      {{=repo}} ||
+      {{=A('users', _href=URL('config', args=[repo, 'passwd']))}} ||
+      {{=A('authz', _href=URL('config', args=[repo, 'authz']))}} ||
+      {{=A('config', _href=URL('config', args=[repo, 'svnserve.conf']))}}
+  </li>{{pass}}
+</ul>{{else:}}
+<p>{{=T('No repositories found.')}}</p>{{pass}}
+{{end}}

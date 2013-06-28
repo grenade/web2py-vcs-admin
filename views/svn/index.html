@@ -1,0 +1,21 @@
+{{import helpers}}
+{{left_sidebar_enabled,right_sidebar_enabled=False,('title' in globals())}}
+{{extend 'layout.html'}}
+{{if 'title' in globals():}}<h3>{{=title}}</h3>{{pass}}
+<h4>{{=helpers.get_greeting()}}</h4>
+<p>This interface will help you to manage your subversion password for the svn repositories on this server.</p>
+<p>{{=A('Click here', _href=URL('user', args=['password']))}} to set your password now.</p>
+{{pass}}
+
+{{block right_sidebar}}
+<h6>{{=T("Repositories")}}</h6>
+{{if 'repo_list' in globals():}}<ul>{{for repo in repo_list:}}
+  <li>
+      {{=repo}} ||
+      {{=A('users', _href=URL('config', args=[repo, 'passwd']))}} ||
+      {{=A('authz', _href=URL('config', args=[repo, 'authz']))}} ||
+      {{=A('config', _href=URL('config', args=[repo, 'svnserve.conf']))}}
+  </li>{{pass}}
+</ul>{{else:}}
+<p>{{=T('No repositories found.')}}</p>{{pass}}
+{{end}}
